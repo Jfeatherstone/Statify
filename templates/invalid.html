@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>Statify</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="icon" href="./favicon.png" type="image/x-icon">
+<style>
+body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+.w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+
+.vertical-center {display: table-cell; height: 300px; vertical-align: middle;}
+</style>
+<body>
+
+<!-- Navbar -->
+<div class="w3-top">
+  <div class="w3-bar w3-light-blue w3-card w3-left-align w3-large">
+    <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-light-blue" href="javascript:void(0);" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
+    <a href="/" class="w3-bar-item w3-button w3-padding-large w3-white">Home</a>
+  </div>
+
+</div>
+
+<!-- Header -->
+<header class="w3-container w3-pale-blue w3-center" style="padding:48px 16px 0px 16px">
+  <h1 class="w3-margin w3-jumbo">Statify<h1>
+
+    <!-- Search -->
+    <form method="post" action="/">
+        <div class="form-group w3-container w3-center w3-padding-8">
+            <input type="text" style="width: 50%; height: 60px; font-size: 5" name="username"
+                   placeholder="Enter your Spotify username" class="form-control w3-center w3-text-black"></input>
+        </div>
+    </form>
+
+</header>
+
+<header class="w3-container w3-pale-blue w3-center" style="padding:0px 16px 16px 16px">
+    <p class="w3-large w3-padding-8">Or to test on my profile, try <i>Jack5225x</i>.</p>
+</header>
+
+<!-- Error text -->
+<div class="w3-row-padding w3-padding-16 w3-container">
+  <div class="w3-content w3-center">
+
+      <h3 class="w3-text-red">{{ data["error_msg"] }}</h3>
+
+  </div>
+</div>
+
+<!-- First Grid -->
+<div class="w3-row-padding w3-padding-64 w3-container">
+  <div class="w3-content">
+
+    <div class="w3-third w3-center">
+        <img src="https://raw.githubusercontent.com/Jfeatherstone/sketch-your-science/master/tech/terminal.png" width=200px>
+    </div>
+
+    <div class="w3-twothird">
+      <h1 style="text-align: right">About</h1>
+      <h5 class="w3-padding-16">This webpage will create a low-dimensional, quantitative representation of your Spotify music library, based on audio features of your songs. </h5>
+    </div>
+
+  </div>
+</div>
+
+<!-- Second Grid -->
+<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+  <div class="w3-content">
+
+    <div class="w3-twothird">
+      <h1>Technical Stuff</h1>
+
+      <h5 class="w3-padding-16">This was created using the <a href="spotipy.readthedocs.io/">Spotipy</a> library in Python, in conjunction with several scientific computing libraries, including <a href="https://scikit-learn.org/stable/">Scikit-learn</a>, <a href="https://plotly.com/">Plotly</a>, and <a href="https://pandas.pydata.org/">Pandas</a>.</h5>
+
+      <h5 class="w3-padding-16">Source code is available <a href="https://github.com/Jfeatherstone/Statify">here</a></h5>
+
+    </div>
+
+    <div class="w3-third w3-center">
+        <img src="https://raw.githubusercontent.com/Jfeatherstone/sketch-your-science/master/tech/lcd_display.gif" width=300px>
+    </div>
+
+  </div>
+</div>
+
+<div class="w3-container w3-black w3-center w3-opacity w3-padding-16">
+    <div class="w3-content">
+        <p><a href="mailto:jack.featherstone@oist.jp">Contact me</a></p>
+        <p><a href="https://github.com/jfeatherstone/jfeatherstone.github.io" target="_blank">Website Source Code</a></p>
+    </div>
+</div>
+
+
+<script>
+// Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else { 
+    x.className = x.className.replace(" w3-show", "");
+  }
+}
+</script>
+
+</body>
+</html>
+
+
