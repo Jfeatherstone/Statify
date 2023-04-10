@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, Markup
 
+import threading
 import numpy as np
 
 import DataProcessing as da
@@ -7,6 +8,10 @@ import DataProcessing as da
 spotify = da.authenticate()
 
 app = Flask('SpotifyWebStats')
+
+songRef = ''
+
+previousFig = None
 
 @app.route('/', methods=('GET', 'POST'))
 def home():
@@ -23,6 +28,7 @@ def home():
             # for the user
             data = {}
             data["username"] = username
+            data["song-result"] = songRef
           
             # It's possible that the username will not exist,
             # so we need to wrap in try/except
@@ -76,7 +82,7 @@ def home():
             #return render_template('results.html', data=data)
 
             # Merge all of the tracks into a single phase space of audio features
-            phaseSpace, identities, featureNames = da.mergePlaylistTracks(playlists.iloc[activePlaylistIndices]["id"], spotify)
+            phaseSpace, identities, featureNames = da.mergePlaylistTracks(playlists.iloc[activePlaylistIndices]["id"])
 
             # DEBUG: just start with 2d PCA
             if method == 'pca':
@@ -124,11 +130,35 @@ def home():
             #    f.write(htmlString)
 
             data["figure_markup"] = Markup(fig.to_html(include_plotlyjs=True))
+            previousFig = data["figure_markup"]
 
             return render_template('results.html', data=data)
 
     # If it is just a get request, we just show the landing
     return render_template('index.html')
+
+@app.route('/autocomplete', methods=['GET', 'POST'])
+def autocomplete():
+    searchTerm = request.form.get('song-search')
+
+    print(request.form)
+
+    searchResults = spotify.search(searchTerm, type='track', limit=5)
+
+    songNames = [s["name"] for s in searchResults["tracks"]["items"]]
+
+    data = {}
+    data["song"] = songNames[0]
+
+    print(songNames)
+
+    if previousFig:
+        data["figure_markup"] = previousFig 
+
+    return render_template('results.html', data=data)
+
+def testFunc(arg):
+    return list(str(arg))
 
 if __name__ == '__main__':
     app.run()

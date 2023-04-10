@@ -95,6 +95,35 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
     </div>
 
   </div>
+
+</div>
+
+<div class="w3-content w3-center">
+
+    <h1 style="text-align: center">Song Allocation</h1>
+
+    <p>Search for a song below to see which of {{ data["username"] }}'s playlists it would best fit into.</p>
+
+    <form method="post" action="/autocomplete">
+        <div class="form-group w3-container w3-center w3-padding-8">
+            <input type="text" style="width: 50%; height: 60px; font-size: 5" name="song-search" id="song-search-box"
+            placeholder="Enter a song search query" value="{{ data['song-search'] }}" class="form-control w3-center w3-text-black"></input>
+        </div>
+    </form>
+
+
+    <script>
+      $( function() {
+        var songSuggestions = [
+            {% for song in songs %}
+                "{{song}}",
+            {% endfor %}
+        ];
+        $( "#song-search-box" ).autocomplete({
+          source: songSuggestions
+        });
+      } );
+  </script>
 </div>
 
 <!-- First Grid -->
