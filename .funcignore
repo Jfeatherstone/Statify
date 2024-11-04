@@ -1,0 +1,8 @@
+notebooks
+.git*
+data
+__pycache__
+.ipynb_checkpoints
+
+azure_setup.sh
+set_env.sh

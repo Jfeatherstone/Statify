@@ -18,34 +18,45 @@ import spotipy as sp
 
 import time
 import tqdm
+import os
 
 # The username to authenticate with
 # Data from other users can still be processed
 AUTH_USERNAME = 'Jack5225x'
+
 # A file that contains the client id and secret in the format:
 # Client ID: <id>
 # Client Secret: <secret>
 AUTH_CREDS_FILE = 'SpotifyCredentials.txt'
+
+# These are the environment variable names that contain
+# the name, id, and secret for the Spotify API
+AUTH_USERNAME_VAR = 'SPOTIFY_USERNAME'
+AUTH_CREDS_ID_VAR = 'SPOTIFY_ID'
+AUTH_CREDS_SECRET_VAR = 'SPOTIFY_SECRET'
+
 # Where to redirect after authentication; if unsure
 # just leave as localhost
 AUTH_REDIRECT_URI = 'http://localhost'
 AUTH_SCOPE = 'user-library-read user-modify-playback-state user-read-currently-playing user-read-playback-state'
 
-def authenticate(username=AUTH_USERNAME, credsFile=AUTH_CREDS_FILE, redirectURI=AUTH_REDIRECT_URI, scope=AUTH_SCOPE):
+def authenticate(username=None, clientID=None, clientSecret=None, redirectURI=AUTH_REDIRECT_URI, scope=AUTH_SCOPE):
     """
     Generate a spotipy instance using provided authentication information.
 
     Parameters
     ----------
-    username : str
-        The spotify username for authentication.
+    username : str or None
+        The spotify username for authentication. If `None`, will be
+        read from the SPOTIFY_USERNAME environment variable.
 
-    credsFile : str
-        Path to a file that contains the client ID and secret
-        in the format:
-        <credsFile>
-        Client ID: <id>
-        Client Secret: <secret>
+    clientID : str or None
+        The spotify client ID for authentication. If `None`, will be
+        read from the SPOTIFY_ID environment variable.
+
+    clientSecret : str or None
+        The spotify client secret for authentication. If `None`, will be
+        read from the SPOTIFY_SECRET environment variable.
 
     redirectURI : str
         The web address to redirect to during authentication, specifically
@@ -54,19 +65,27 @@ def authenticate(username=AUTH_USERNAME, credsFile=AUTH_CREDS_FILE, redirectURI=
         and provide it back to python (Spotipy will give instructions
         for this if it is necessary). localhost is easist choice.
 
+    scope : str
+        All the required scopes that will be used in the API. See Spotipy
+        documentation for more information
+
     Returns
     -------
     spotify : spotipy.Spotify
         Spotify instance that can be used to search for songs,
         users, and playlists.
     """
-    clientID = None
-    clientSecret = None
+    if username is None:
+        username = os.environ.get(AUTH_USERNAME_VAR, None)
 
-    with open(credsFile) as cFile:
-        clientID = cFile.readline().split(':')[1].strip()
-        clientSecret = cFile.readline().split(':')[1].strip()
+    if clientID is None:
+        clientID = os.environ.get(AUTH_CREDS_ID_VAR, None)
 
+    if clientSecret is None:
+        clientSecret = os.environ.get(AUTH_CREDS_SECRET_VAR, None)
+
+    print(username, clientID, clientSecret)
+    
     if clientID and clientSecret:
         token = sp.util.prompt_for_user_token(username,
                                               scope=scope,
@@ -77,7 +96,8 @@ def authenticate(username=AUTH_USERNAME, credsFile=AUTH_CREDS_FILE, redirectURI=
         return sp.Spotify(auth=token)
 
     else:
-        raise Exception(f'Invalid creds file: {credsFile}!')
+        raise Exception('Invalid credentials provided!')
+
 
 def fetchPublicPlaylists(username, spotify=None):
     """
@@ -543,9 +563,11 @@ def decompositionHull(decomposedCoords, coordinateIdentities, humanReadableIdent
             color = str(colour.Color(pick_for=labels[s]))
             
             scatter = Scatter(x=decomposedCoords[indices,0], y=decomposedCoords[indices,1],
-                              mode='markers', marker=Marker2D(color=color, size=8), name=labels[s], showlegend=False)
+                              mode='markers', marker=Marker2D(color=color, size=8),
+                              name='', legendgroup=labels[s], legendgrouptitle={"text": ''}, showlegend=False)
             polygon = Scatter(x=hull[:,0], y=hull[:,1], fill='toself', fillcolor=color, opacity=.2,
-                              mode='markers', marker=Marker2D(color=color, size=8), showlegend=True, name=labels[s])
+                              mode='markers', marker=Marker2D(color=color, size=8),
+                              name=labels[s], legendgroup=labels[s], legendgrouptitle={"text": ''}, showlegend=True)
 
             data.append(scatter)
             data.append(polygon)
@@ -564,11 +586,13 @@ def decompositionHull(decomposedCoords, coordinateIdentities, humanReadableIdent
             indices = np.where(np.array(coordinateIdentities) == uniqueIdentities[s])[0]
 
             color = str(colour.Color(pick_for=labels[s]))
-            scatter = Scatter3d(mode='markers', marker=Marker(color=color, size=2), name=labels[s], showlegend=True,
-                                x=decomposedCoords[indices,0], y=decomposedCoords[indices,1], z=decomposedCoords[indices,2])
+            scatter = Scatter3d(mode='markers', marker=Marker(color=color, size=2),
+                                x=decomposedCoords[indices,0], y=decomposedCoords[indices,1], z=decomposedCoords[indices,2],
+                                name='', legendgroup=labels[s], legendgrouptitle={"text": ''}, showlegend=False)
 
-            mesh = Mesh3d(alphahull=alpha, color=color, opacity=0.3, name=labels[s], showlegend=False,
-                                x=decomposedCoords[indices,0], y=decomposedCoords[indices,1], z=decomposedCoords[indices,2])
+            mesh = Mesh3d(alphahull=alpha, color=color, opacity=0.3,
+                                x=decomposedCoords[indices,0], y=decomposedCoords[indices,1], z=decomposedCoords[indices,2],
+                                name=labels[s], legendgroup=labels[s], legendgrouptitle={"text": ''}, showlegend=True)
    
             dataArr.append(scatter)
             dataArr.append(mesh)
