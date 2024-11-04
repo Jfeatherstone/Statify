@@ -1,6 +1,14 @@
 SpotifyCredentials.txt
 
+azure_setup.sh
+
 .cache*
+
+*.gif
+*.swp
+
+example.html
 
 .ipynb_checkpoints
 __pycache__
+data

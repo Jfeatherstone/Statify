@@ -82,7 +82,8 @@ def home():
             #return render_template('results.html', data=data)
 
             # Merge all of the tracks into a single phase space of audio features
-            phaseSpace, identities, featureNames = da.mergePlaylistTracks(playlists.iloc[activePlaylistIndices]["id"])
+            # NOTE: I used to use the "id" field, but it seems that has been replaced with "uri"
+            phaseSpace, identities, featureNames = da.mergePlaylistTracks(playlists.iloc[activePlaylistIndices]["uri"])
 
             # DEBUG: just start with 2d PCA
             if method == 'pca':
@@ -95,9 +96,9 @@ def home():
                 decompCoords = da.computeLDA(phaseSpace, identities, reducedDims)
 
 
-            # By default, the identities array uses the ids, but the
+            # By default, the identities array uses the uri, but the
             # names are much more readable, so we want to convert to names
-            idToName = dict(zip(playlists["id"], playlists["name"]))
+            idToName = dict(zip(playlists["uri"], playlists["name"]))
 
             # Generate the figure
             fig = da.decompositionHull(decompCoords, identities, idToName, 0.05)

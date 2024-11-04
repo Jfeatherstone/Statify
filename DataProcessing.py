@@ -236,7 +236,7 @@ def fetchPlaylistTracks(playlistID, spotify=None):
     Parameters
     ----------
     playlistID : str
-        A valid Spotify playlist id.
+        A valid Spotify playlist id ("uri").
 
     spotify : spotipy.Spotify or None
        Spotify instance used to do the search. If not
