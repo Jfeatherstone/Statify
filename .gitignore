@@ -1,6 +1,7 @@
 SpotifyCredentials.txt
 
 azure_setup.sh
+set_env.sh
 
 .cache*
 
